@@ -1,0 +1,52 @@
+replicaCount:
+  frontend: 2
+  backend: 2
+
+image:
+  frontend:
+    repository: ghcr.io/your-org/travel-frontend
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  backend:
+    repository: ghcr.io/your-org/travel-backend
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+service:
+  frontend:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000 # container port for frontend
+  backend:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080 # container port for backend
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ingress:
+  enabled: false
+  host: travel.local
+  annotations: {}
+  tls: false
+
+# Liveness/Readiness probes (optional)
+probes:
+  frontend:
+    liveness:
+      path: /health
+      port: 3000
+      initialDelaySeconds: 30
+      periodSeconds: 10
+  backend:
+    liveness:
+      path: /health
+      port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
