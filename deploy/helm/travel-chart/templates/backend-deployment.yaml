@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "travel.fullname" . }}-backend
+  labels:
+    {{ include "travel.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount.backend }}
+  selector:
+    matchLabels:
+      app: {{ include "travel.fullname" . }}-backend
+  template:
+    metadata:
+      labels:
+        app: {{ include "travel.fullname" . }}-backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.image.backend.repository }}:{{ .Values.image.backend.tag }}"
+          imagePullPolicy: {{ .Values.image.backend.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.backend.targetPort }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.probes.backend.liveness.path }}
+              port: {{ .Values.probes.backend.liveness.port }}
+            initialDelaySeconds: {{ .Values.probes.backend.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.backend.liveness.periodSeconds }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.probes.backend.liveness.path }}
+              port: {{ .Values.probes.backend.liveness.port }}
+            initialDelaySeconds: {{ .Values.probes.backend.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.backend.liveness.periodSeconds }}
+          env:
+            - name: BACKEND_PORT
+              value: "{{ .Values.service.backend.targetPort }}"
+          resources: {{ toYaml .Values.resources | nindent 10 }}
