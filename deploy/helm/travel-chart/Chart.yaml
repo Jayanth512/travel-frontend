@@ -1,0 +1,7 @@
+apiVersion: v2
+name: travel-management
+description: Helm chart for Travel Management System (frontend + backend)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+author: Jayanth Kumar Reddy
