@@ -1,0 +1,8 @@
+Thank you for installing {{ .Chart.Name }}!
+
+To verify the deployment run:
+  kubectl get deployments -l app.kubernetes.io/instance={{ .Release.Name }}
+  kubectl get svc -l app.kubernetes.io/instance={{ .Release.Name }}
+
+If you enabled ingress, check:
+  kubectl get ingress -l app.kubernetes.io/instance={{ .Release.Name }}
